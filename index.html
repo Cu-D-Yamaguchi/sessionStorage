@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>sessionStorage</title>
+		<style>
+		</style>
+	</head>
+	<body>
+
+		<p>保存したい文字列:</p>
+		<textarea id="str" style="width:500px; height:100px; margin:0px 0px 5px 0px; color:grey;"></textarea><br>
+
+		<p>range:</p>
+		<input type="range" id="range" name="range" min="0" max="10" >
+		<br>
+
+		<p>テキストエリアの背景色:</p>
+		<input type="color" id="back_color">
+		<input type="button" id="button_back_color" style="width:100px; height:40px; margin:0px 0px 10px 0px;" value="背景色変更">
+		<br>
+
+		<input type="button" id="button_load" style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="読み込み">
+		<input type="button" id="button_save" style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="保存">
+		<input type="button" id="button_alldel"  style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="全削除">
+
+<script type="text/javascript">
+
+(function (){
+
+	// テキストエリアの値を取得
+	var element_edit_str = document.getElementById("str");
+	// rangeの値を取得
+	var element_edit_range = document.getElementById("range");
+	// テキストエリアの背景色の値を取得
+	var element_edit_color = document.getElementById("back_color");
+
+	var element;
+
+	// 背景色変更ボタンの element を取得
+	element = document.getElementById("button_back_color");
+	element.onclick = function(){
+		
+		// 背景色変更ボタンが押されたときにテキストエリアの背景色を変更
+		element_edit_str.style.backgroundColor = element_edit_color.value;
+	};
+	
+	// 読み込みボタンの element を取得
+	element = document.getElementById("button_load");
+	// ボタンが押されたときに実行されるイベント
+	element.onclick = function (){
+		try{
+			// 各"_key" からデータを取り出す
+			element_edit_str.value = sessionStorage.getItem("str_key");
+			element_edit_range.value = sessionStorage.getItem("range_key");
+			element_edit_color.value = sessionStorage.getItem("color_key");
+			element_edit_str.style.backgroundColor = sessionStorage.getItem("color_key");;
+		}catch(e){
+			// エラーを出力
+			element_edit_str.value = e + "\n" + element_edit.value;
+		}
+	};
+	
+	// 保存ボタンの element を取得
+	element = document.getElementById("button_save");
+	// ボタンが押されたときに実行されるイベント
+	element.onclick = function (){
+		try{
+			// 各"_key" からデータを取り出す
+			sessionStorage.setItem("str_key",element_edit_str.value);
+			sessionStorage.setItem("range_key",element_edit_range.value);
+			sessionStorage.setItem("color_key",element_edit_color.value);
+
+		}catch(e){
+			// エラーを出力
+			element_edit_str.value = e + "\n" + element_edit_str.value;
+		}
+	};
+
+	// 削除ボタンの element を取得
+	element = document.getElementById("button_alldel");
+	// ボタンが押されたときに実行されるイベント
+	element.onclick = function (){
+		try{
+			// 各"_key" のデータを削除する
+			sessionStorage.clear();
+			
+		}catch(e){
+			// エラーを出力
+			element_edit_str.value = e + "\n" + element_edit_str.value;
+		}
+	};
+})();
+</script>
+</body>
+</html>
