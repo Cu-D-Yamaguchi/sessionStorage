@@ -21,7 +21,10 @@
 		<br>
 
 		<input type="button" id="button_load" style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="読み込み">
-		<input type="button" id="button_save" style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="保存">
+		<input type="button" id="button_save" style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="保存"><br>
+		<input type="button" id="button_str_del"  style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="文字列削除">
+		<input type="button" id="button_range_del"  style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="range削除">
+		<input type="button" id="button_back_color_del"  style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="背景色削除">
 		<input type="button" id="button_alldel"  style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="全削除">
 
 <script type="text/javascript">
@@ -57,7 +60,10 @@
 			element_edit_str.style.backgroundColor = sessionStorage.getItem("color_key");;
 		}catch(e){
 			// エラーを出力
-			element_edit_str.value = e + "\n" + element_edit.value;
+			element_edit_str.value = e + "\n" + element_edit_str.value;
+			element_edit_range.value = e + "\n" + element_edit_range.value;
+			element_edit_color.value = e + "\n" + element_edit_color.value;
+			element_edit_str.style.backgroundColor+ "\n" + element_edit_str.style.backgroundColor;
 		}
 	};
 	
@@ -74,10 +80,54 @@
 		}catch(e){
 			// エラーを出力
 			element_edit_str.value = e + "\n" + element_edit_str.value;
+			element_edit_range.value = e + "\n" + element_edit_range.value;
+			element_edit_color.value = e + "\n" + element_edit_color.value;
 		}
 	};
 
-	// 削除ボタンの element を取得
+	// 文字列削除ボタンの element を取得
+	element = document.getElementById("button_str_del");
+	// ボタンが押されたときに実行されるイベント
+	element.onclick = function (){
+		try{
+			// "str_key" のデータを削除する
+			sessionStorage.removeItem('str_key');
+			
+		}catch(e){
+			// エラーを出力
+			element_edit_str.value = e + "\n" + element_edit_str.value;
+		}
+	}
+
+	// range削除ボタンの element を取得
+	element = document.getElementById("button_range_del");
+	// ボタンが押されたときに実行されるイベント
+	element.onclick = function (){
+		try{
+			// "range_key" のデータを削除する
+			sessionStorage.removeItem('range_key');
+			
+		}catch(e){
+			// エラーを出力
+			element_edit_str.value = e + "\n" + element_edit_range.value;
+		}
+	}
+
+	// 背景色削除ボタンの element を取得
+	element = document.getElementById("button_back_color_del");
+	// ボタンが押されたときに実行されるイベント
+	element.onclick = function (){
+		try{
+			// "str_key" のデータを削除する
+			sessionStorage.removeItem('color_key');
+			
+		}catch(e){
+			// エラーを出力
+			element_edit_color.value = e + "\n" + element_edit_color.value;
+		}
+	}
+
+	// 全削除ボタンの element を取得
 	element = document.getElementById("button_alldel");
 	// ボタンが押されたときに実行されるイベント
 	element.onclick = function (){
@@ -88,6 +138,8 @@
 		}catch(e){
 			// エラーを出力
 			element_edit_str.value = e + "\n" + element_edit_str.value;
+			element_edit_range.value = e + "\n" + element_edit_range.value;
+			element_edit_color.value = e + "\n" + element_edit_color.value;
 		}
 	};
 })();
