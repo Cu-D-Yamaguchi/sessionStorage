@@ -9,19 +9,36 @@
 	<body>
 
 		<p>保存したい文字列:</p>
-		<textarea id="str" style="width:500px; height:100px; margin:0px 0px 5px 0px; color:grey;"></textarea><br>
+		<textarea id="str" style="width:500px; height:100px; margin:0px 0px 5px 0px; color:gray; background-color:#000000;" ></textarea><br>
 
 		<p>range:</p>
 		<input type="range" id="range" name="range" min="0" max="10" >
+		<span id="now_range" >5</span>
 		<br>
 
 		<p>テキストエリアの背景色:</p>
-		<input type="color" id="back_color">
+		<input type="color" id="back_color" value="#000000">
+		<span id="now_color">#000000</span>
 		<input type="button" id="button_back_color" style="width:100px; height:40px; margin:0px 0px 10px 0px;" value="背景色変更">
 		<br>
 
+
 		<input type="button" id="button_load" style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="読み込み">
 		<input type="button" id="button_save" style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="保存"><br>
+
+		<p>保存した文字列:</p>
+		<textarea id="save_str" style="width:500px; height:100px; margin:0px 0px 5px 0px; color:gray; background-color:#000000;" ></textarea><br>
+
+		<p>保存したrange:</p>
+		<input type="range" id="save_range1" name="range" min="0" max="10" >
+		<span id="save_range2" >5</span>
+		<br>
+
+		<p>保存したテキストエリアの背景色:</p>
+		<input type="color" id="save_color1" value="#000000">
+		<span id="save_color2">#000000</span>
+		<br>
+
 		<input type="button" id="button_str_del"  style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="文字列削除">
 		<input type="button" id="button_range_del"  style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="range削除">
 		<input type="button" id="button_back_color_del"  style="width:80px; height:40px; margin:0px 0px 10px 0px;" value="背景色削除">
@@ -37,7 +54,35 @@
 	var element_edit_range = document.getElementById("range");
 	// テキストエリアの背景色の値を取得
 	var element_edit_color = document.getElementById("back_color");
+	// rangeの値を表示する為の変数
+    var now_range = document.getElementById('now_range');
+	// テキストエリアの背景色の値を表示する為の変数
+    var now_range = document.getElementById('now_range');
+	// 保存したテキストエリアの値を表示するための変数
+	var element_save_str =document.getElementById("save_str");
+	// 保存したrangeの値を表示するための変数
+	var element_save_range1 =document.getElementById("save_range1");
+	var element_save_range2 =document.getElementById("save_range2");
+	// 保存したテキストエリアの背景色の値を表示するための変数
+	var element_save_color1 =document.getElementById("save_color1");
+	var element_save_color2 =document.getElementById("save_color2");
 
+	// rangeの値に変更が加えられた際にその値を表示する
+    var range_value = function (element_edit_range, now_range) {
+    return function(evt){
+      now_range.innerHTML = element_edit_range.value;
+    }
+  }
+  element_edit_range.addEventListener('input', range_value(element_edit_range, now_range));
+
+	// テキストエリアの背景色の値に変更が加えられた際にその値を表示する
+    var color_value = function (element_edit_color, now_color) {
+    return function(evt){
+      now_color.innerHTML = element_edit_color.value;
+    }
+  }
+  element_edit_color.addEventListener('input', color_value(element_edit_color, now_color));
+  
 	var element;
 
 	// 背景色変更ボタンの element を取得
@@ -46,6 +91,7 @@
 		
 		// 背景色変更ボタンが押されたときにテキストエリアの背景色を変更
 		element_edit_str.style.backgroundColor = element_edit_color.value;
+
 	};
 	
 	// 読み込みボタンの element を取得
@@ -57,13 +103,13 @@
 			element_edit_str.value = sessionStorage.getItem("str_key");
 			element_edit_range.value = sessionStorage.getItem("range_key");
 			element_edit_color.value = sessionStorage.getItem("color_key");
-			element_edit_str.style.backgroundColor = sessionStorage.getItem("color_key");;
+			element_edit_str.style.backgroundColor = sessionStorage.getItem("color_key");
 		}catch(e){
 			// エラーを出力
 			element_edit_str.value = e + "\n" + element_edit_str.value;
 			element_edit_range.value = e + "\n" + element_edit_range.value;
 			element_edit_color.value = e + "\n" + element_edit_color.value;
-			element_edit_str.style.backgroundColor+ "\n" + element_edit_str.style.backgroundColor;
+			element_edit_str.style.backgroundColor = e + "\n" + element_edit_str.style.backgroundColor;
 		}
 	};
 	
@@ -72,16 +118,31 @@
 	// ボタンが押されたときに実行されるイベント
 	element.onclick = function (){
 		try{
-			// 各"_key" からデータを取り出す
+			// 各"_key" のデータを保存する
 			sessionStorage.setItem("str_key",element_edit_str.value);
 			sessionStorage.setItem("range_key",element_edit_range.value);
 			sessionStorage.setItem("color_key",element_edit_color.value);
+
+			//保存した各"_key" を表示する
+			element_save_str.value = sessionStorage.getItem("str_key");
+			element_save_range1.value = sessionStorage.getItem("range_key");
+			element_save_color1.value = sessionStorage.getItem("color_key");
+			element_save_range2.innerHTML = sessionStorage.getItem("range_key");
+			element_save_color2.innerHTML = sessionStorage.getItem("color_key");
+			element_save_str.style.backgroundColor = sessionStorage.getItem("color_key");
 
 		}catch(e){
 			// エラーを出力
 			element_edit_str.value = e + "\n" + element_edit_str.value;
 			element_edit_range.value = e + "\n" + element_edit_range.value;
 			element_edit_color.value = e + "\n" + element_edit_color.value;
+			element_save_str.value = e + "\n" + element_save_str.value;
+			element_save_range1.value = e + "\n" + element_save_range1.value;
+			element_save_color1.value = e + "\n" + element_save_color1.value;
+			element_save_range2.innerHTML = e + "\n" + element_save_range2.innerHTML;
+			element_save_color2.innerHTML = e + "\n" + element_save_color2.innerHTML;
+			element_save_str.style.backgroundColor = e + "\n" + element_save_str.style.backgroundColor;
+			
 		}
 	};
 
@@ -92,10 +153,13 @@
 		try{
 			// "str_key" のデータを削除する
 			sessionStorage.removeItem('str_key');
+			// ”str_key”は削除されているので何も入ってないことを確認するため代入
+			element_save_str.value = sessionStorage.getItem("str_key");
 			
 		}catch(e){
 			// エラーを出力
 			element_edit_str.value = e + "\n" + element_edit_str.value;
+			element_save_str.value = e + "\n" + element_save_str.value;
 		}
 	}
 
@@ -106,10 +170,21 @@
 		try{
 			// "range_key" のデータを削除する
 			sessionStorage.removeItem('range_key');
+			element_save_range1.value = sessionStorage.getItem("range_key");
+			// "range_key" に何も入ってなければ初期値の5を代入する
+			if (sessionStorage.getItem("range_key") === null){
+				element_save_range1.value = "5"
+				element_save_range2.innerHTML = "5";
+			}else{
+				// "range_key"に何かの値が入っていればその値を代入する
+				element_save_range1.value = sessionStorage.getItem("range_key");
+				element_save_range1.value = sessionStorage.getItem("range_key");
+			};
 			
 		}catch(e){
 			// エラーを出力
-			element_edit_str.value = e + "\n" + element_edit_range.value;
+			element_save_range1.value = e + "\n" + element_save_range1.value;
+			element_save_range2.innerHTML = e + "\n" + element_save_range2.innerHTML;
 		}
 	}
 
@@ -120,12 +195,23 @@
 		try{
 			// "color_key" のデータを削除する
 			sessionStorage.removeItem('color_key');
+			// "color_key" に何も入ってなければ初期値の#000000を代入する
+			if (sessionStorage.getItem("color_key") === null){
+				element_save_color2.innerHTML = "#000000";
+				element_save_color1.value = "#000000";
+				element_save_str.style.backgroundColor = "#000000";
+			}else{
+				// "color_key"に何かの値が入っていればその値を代入する
+				element_save_color1.value = sessionStorage.getItem("color_key");
+				element_save_color2.innerHTML = sessionStorage.getItem("color_key");
+				element_save_str.style.backgroundColor = sessionStorage.getItem("color_key");
+			};
 			
 		}catch(e){
 			// エラーを出力
 			element_edit_color.value = e + "\n" + element_edit_color.value;
 		}
-	}
+	}	
 
 	// 全削除ボタンの element を取得
 	element = document.getElementById("button_alldel");
@@ -134,12 +220,39 @@
 		try{
 			// 各"_key" のデータを削除する
 			sessionStorage.clear();
-			
+			// ”str_key”は削除されているので何も入ってないことを確認するため代入
+			element_save_str.value = sessionStorage.getItem("str_key");
+			// "range_key" に何も入ってなければ初期値の5を代入する
+			if (sessionStorage.getItem("range_key") === null){
+				element_save_range1.value = "5"
+				element_save_range2.innerHTML = "5";
+			}else{
+				// "range_key"に何かの値が入っていればその値を代入する
+				element_save_range1.value = sessionStorage.getItem("range_key");
+				element_save_range1.value = sessionStorage.getItem("range_key");		
+			};
+			// "color_key" に何も入ってなければ初期値の#000000を代入する
+			if (sessionStorage.getItem("color_key") === null){
+				element_save_color2.innerHTML = "#000000";
+				element_save_color1.value = "#000000";
+				element_save_str.style.backgroundColor = "#000000";
+			}else{
+				// "color_key"に何かの値が入っていればその値を代入する
+				element_save_color1.value = sessionStorage.getItem("color_key");
+				element_save_color2.innerHTML = sessionStorage.getItem("color_key");
+				element_save_str.style.backgroundColor = sessionStorage.getItem("color_key");
+			};
 		}catch(e){
 			// エラーを出力
 			element_edit_str.value = e + "\n" + element_edit_str.value;
 			element_edit_range.value = e + "\n" + element_edit_range.value;
 			element_edit_color.value = e + "\n" + element_edit_color.value;
+			element_save_str.value = e + "\n" + element_save_str.value;
+			element_save_range1.value = e + "\n" + element_save_range1.value;
+			element_save_color1.value = e + "\n" + element_save_color1.value;
+			element_save_range2.innerHTML = e + "\n" + element_save_range2.innerHTML;
+			element_save_color2.innerHTML = e + "\n" + element_save_color2.innerHTML;
+			element_save_str.style.backgroundColor = e + "\n" + element_save_str.style.backgroundColor;
 		}
 	};
 })();
